@@ -10,3 +10,8 @@ README.md
 yalc.lock
 testApi/
 *.local.*
+
+docker/db
+docker/FastGPT
+docker/mongo
+docker/pg

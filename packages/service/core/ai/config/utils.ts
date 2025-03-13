@@ -36,8 +36,8 @@ export const loadSystemModels = async (init = false) => {
         ? currentFileUrl.pathname.substring(1) // Remove leading slash on Windows
         : currentFileUrl.pathname
     );
-    const modelsPath = path.join(path.dirname(filePath), 'provider');
-
+    // const modelsPath = path.join(path.dirname(filePath), 'provider');
+    const modelsPath = path.join('/provider');
     return fs.readdirSync(modelsPath) as string[];
   };
   const pushModel = (model: SystemModelItemType) => {

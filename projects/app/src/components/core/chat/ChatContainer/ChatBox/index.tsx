@@ -657,7 +657,7 @@ const ChatBox = ({
 
     return () => {
       if (!chat.dataId) return;
-      debugger;
+      // debugger;
       if (chat.adminFeedback) {
         setAdminMarkData({
           dataId: chat.dataId,
@@ -850,26 +850,26 @@ const ChatBox = ({
   }, [isReady, resetInputVal, sendPrompt]);
 
   // Set chatRecords
-  useEffect(() => {
-    debugger;
-    setChatRecords((prev) =>
-      prev.map((item) => {
-        if (!item.adminFeedback) {
-          return {
-            ...item,
-            adminFeedback: {
-              feedbackDataId: '',
-              datasetId: '67acadf1851408a130a832e8',
-              collectionId: '',
-              q: '',
-              a: ''
-            }
-          };
-        }
-        return item;
-      })
-    );
-  }, [chatRecords]);
+  // useEffect(() => {
+  //   debugger;
+  //   setChatRecords((prev) =>
+  //     prev.map((item) => {
+  //       if (!item.adminFeedback) {
+  //         return {
+  //           ...item,
+  //           adminFeedback: {
+  //             feedbackDataId: '',
+  //             datasetId: '67acadf1851408a130a832e8',
+  //             collectionId: '',
+  //             q: '',
+  //             a: ''
+  //           }
+  //         };
+  //       }
+  //       return item;
+  //     })
+  //   );
+  // }, [chatRecords]);
 
   // Auto send prompt
   useDebounceEffect(
