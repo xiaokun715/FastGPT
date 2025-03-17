@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Card, IconButton, Flex, Button, useTheme } from '@chakra-ui/react';
+import { Box, Card, IconButton, Flex, Button, useTheme, useDisclosure } from '@chakra-ui/react';
 import {
   getDatasetDataList,
   delOneDatasetDataById,
-  getDatasetCollectionById
+  getDatasetCollectionById,
+  putDatasetDataById
 } from '@/web/core/dataset/api';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@fastgpt/web/hooks/useToast';
@@ -33,6 +34,11 @@ import {
   DatasetCollectionTypeEnum,
   ImportDataSourceEnum
 } from '@fastgpt/global/core/dataset/constants';
+import CustomPromptEditor from '@fastgpt/web/components/common/Textarea/CustomPromptEditor';
+import {
+  PROMPT_QUESTION_GUIDE,
+  PROMPT_QUESTION_GUIDE_FOOTER
+} from '@fastgpt/global/core/ai/prompt/agent';
 
 const DataCard = () => {
   const theme = useTheme();
@@ -48,6 +54,12 @@ const DataCard = () => {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState('');
   const { toast } = useToast();
+
+  const {
+    isOpen: isOpenCustomPrompt,
+    onOpen: onOpenCustomPrompt,
+    onClose: onCloseCustomPrompt
+  } = useDisclosure();
 
   const scrollParams = useMemo(
     () => ({
@@ -142,6 +154,16 @@ const DataCard = () => {
               <TagsPopOver currentCollection={collection} />
             )}
           </Box>
+          {datasetDetail.type !== 'websiteDataset' && !!collection?.chunkSize && (
+            <Button
+              ml={2}
+              variant={'whitePrimary'}
+              size={['sm', 'md']}
+              onClick={onOpenCustomPrompt}
+            >
+              {t('生成索引')}
+            </Button>
+          )}
           {datasetDetail.type !== 'websiteDataset' && !!collection?.chunkSize && (
             <Button
               ml={2}
@@ -343,6 +365,7 @@ const DataCard = () => {
               return;
             }
             setDatasetDataList((prev) => {
+              debugger;
               return prev.map((item) => {
                 if (item._id === editDataId) {
                   return {
@@ -354,6 +377,43 @@ const DataCard = () => {
               });
             });
           }}
+        />
+      )}
+      {isOpenCustomPrompt && (
+        <CustomPromptEditor
+          defaultValue="defaultValue"
+          defaultPrompt={PROMPT_QUESTION_GUIDE}
+          footerPrompt={PROMPT_QUESTION_GUIDE_FOOTER}
+          onChange={(e) => {
+            datasetDataList.forEach((item) => {
+              putDatasetDataById({
+                dataId: item._id,
+                a: item.a,
+                q: item.q,
+                indexes: [
+                  {
+                    dataId: '111',
+                    defaultIndex: true,
+                    text: item.q
+                  },
+                  {
+                    dataId: '222',
+                    defaultIndex: false,
+                    text: 'index'
+                  }
+                ]
+              });
+            });
+            // router.push({
+            //   query: {
+            //     datasetId,
+            //     currentTab: TabEnum.import,
+            //     source: ImportDataSourceEnum.reTraining,
+            //     collectionId
+            //   }
+            // });
+          }}
+          onClose={onCloseCustomPrompt}
         />
       )}
       <ConfirmModal />
