@@ -276,6 +276,18 @@ export async function parseHeaderCert({
 
     return await authJWT(cookieToken);
   }
+
+  // 新增：支持iframe中的authToken参数
+  async function authIframeToken(authToken?: string) {
+    if (!authToken) {
+      return Promise.reject(ERROR_ENUM.unAuthorization);
+    }
+
+    // 这里可以根据authToken生成临时JWT或直接验证
+    // 为了安全，建议实现一个专门的iframe token验证逻辑
+    return await authJWT(authToken);
+  }
+
   // from authorization get apikey
   async function parseAuthorization(authorization?: string) {
     if (!authorization) {
@@ -325,6 +337,8 @@ export async function parseHeaderCert({
   }
 
   const { cookie, token, rootkey, authorization } = (req.headers || {}) as ReqHeaderAuthType;
+  // 新增：从查询参数中获取authToken
+  const { authToken: iframeAuthToken } = (req.query || {}) as { authToken?: string };
 
   const { uid, teamId, tmbId, appId, openApiKey, authType, isRoot, sourceName } =
     await (async () => {
@@ -344,6 +358,19 @@ export async function parseHeaderCert({
       if (authToken && (token || cookie)) {
         // user token(from fastgpt web)
         const res = await authCookieToken(cookie, token);
+        return {
+          uid: res.userId,
+          teamId: res.teamId,
+          tmbId: res.tmbId,
+          appId: '',
+          openApiKey: '',
+          authType: AuthUserTypeEnum.token,
+          isRoot: res.isRoot
+        };
+      }
+      // 新增：iframe token验证
+      if (authToken && iframeAuthToken) {
+        const res = await authIframeToken(iframeAuthToken);
         return {
           uid: res.userId,
           teamId: res.teamId,
@@ -392,7 +419,7 @@ export const TokenName = 'fastgpt_token';
 export const setCookie = (res: NextApiResponse, token: string) => {
   res.setHeader(
     'Set-Cookie',
-    `${TokenName}=${token}; Path=/; HttpOnly; Max-Age=604800; Samesite=Strict;`
+    `${TokenName}=${token}; Path=/; HttpOnly; Max-Age=604800; Samesite=None; Secure;`
   );
 };
 /* clear cookie */

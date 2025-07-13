@@ -115,7 +115,20 @@ function responseError(err: any) {
 
   // 有报错响应
   if (data?.code in TOKEN_ERROR_CODE) {
-    if (!['/chat/share', '/chat/team', '/login'].includes(window.location.pathname)) {
+    // 检测是否在iframe中
+    const isInIframe = () => {
+      try {
+        return window.self !== window.top;
+      } catch (e) {
+        return true;
+      }
+    };
+
+    // 在iframe中不自动清除token和跳转
+    if (
+      !isInIframe() &&
+      !['/chat/share', '/chat/team', '/login'].includes(window.location.pathname)
+    ) {
       clearToken();
       window.location.replace(
         getWebReqUrl(`/login?lastRoute=${encodeURIComponent(location.pathname + location.search)}`)

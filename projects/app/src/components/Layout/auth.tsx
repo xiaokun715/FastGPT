@@ -17,11 +17,21 @@ const unAuthPage: { [key: string]: boolean } = {
   '/price': true
 };
 
+// 检测是否在iframe中
+const isInIframe = () => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+};
+
 const Auth = ({ children }: { children: JSX.Element | React.ReactNode }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const { toast } = useToast();
   const { userInfo, initUserInfo } = useUserStore();
+  const inIframe = isInIframe();
 
   useQuery(
     [router.pathname],
@@ -35,16 +45,24 @@ const Auth = ({ children }: { children: JSX.Element | React.ReactNode }) => {
     {
       onError(error) {
         console.log('error->', error);
-        router.replace(
-          `/login?lastRoute=${encodeURIComponent(location.pathname + location.search)}`
-        );
-        toast({
-          status: 'warning',
-          title: t('common:support.user.Need to login')
-        });
+        // 在iframe中不自动跳转到登录页
+        if (!inIframe) {
+          router.replace(
+            `/login?lastRoute=${encodeURIComponent(location.pathname + location.search)}`
+          );
+          toast({
+            status: 'warning',
+            title: t('common:support.user.Need to login')
+          });
+        }
       }
     }
   );
+
+  // 在iframe中，如果没有用户信息，直接显示内容（允许匿名访问）
+  if (inIframe && !userInfo && !unAuthPage[router.pathname]) {
+    return children;
+  }
 
   return !!userInfo || unAuthPage[router.pathname] === true ? children : null;
 };
