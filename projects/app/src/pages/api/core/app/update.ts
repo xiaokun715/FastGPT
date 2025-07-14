@@ -68,11 +68,23 @@ async function handler(req: ApiRequestProps<AppUpdateBody, AppUpdateQuery>) {
   if (isMove) {
     if (parentId) {
       // move to a folder, check the target folder's permission
-      await authApp({ req, authToken: true, appId: parentId, per: ManagePermissionVal });
+      await authApp({
+        req,
+        authToken: true,
+        authApiKey: true,
+        appId: parentId,
+        per: ManagePermissionVal
+      });
     }
     if (app.parentId) {
       // move from a folder, check the (old) folder's permission
-      await authApp({ req, authToken: true, appId: app.parentId, per: ManagePermissionVal });
+      await authApp({
+        req,
+        authToken: true,
+        authApiKey: true,
+        appId: app.parentId,
+        per: ManagePermissionVal
+      });
     }
     if (parentId === null || !app.parentId) {
       // move to root or move from root

@@ -15,7 +15,13 @@ async function handler(req: ApiRequestProps<PostPublishAppProps>, res: NextApiRe
   const { appId } = req.query as { appId: string };
   const { nodes = [], edges = [], chatConfig, isPublish, versionName, autoSave } = req.body;
 
-  const { app, tmbId } = await authApp({ appId, req, per: WritePermissionVal, authToken: true });
+  const { app, tmbId } = await authApp({
+    appId,
+    req,
+    per: WritePermissionVal,
+    authToken: true,
+    authApiKey: true
+  });
 
   const { nodes: formatNodes } = beforeUpdateAppFormat({
     nodes,

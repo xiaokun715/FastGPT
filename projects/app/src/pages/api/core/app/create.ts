@@ -39,7 +39,15 @@ async function handler(req: ApiRequestProps<CreateAppBody>) {
   const [{ teamId, tmbId, userId }] = await Promise.all([
     authUserPer({ req, authToken: true, per: WritePermissionVal }),
     ...(parentId
-      ? [authApp({ req, appId: parentId, per: WritePermissionVal, authToken: true })]
+      ? [
+          authApp({
+            req,
+            appId: parentId,
+            per: WritePermissionVal,
+            authToken: true,
+            authApiKey: true
+          })
+        ]
       : [])
   ]);
 

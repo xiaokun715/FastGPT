@@ -21,7 +21,7 @@ async function handler(
   const { appId, searchKey } = req.body;
   const { offset, pageSize } = parsePaginationRequest(req);
 
-  await authApp({ req, appId, authToken: true, per: ReadPermissionVal });
+  await authApp({ req, appId, authToken: true, authApiKey: true, per: ReadPermissionVal });
 
   const params = {
     appId,

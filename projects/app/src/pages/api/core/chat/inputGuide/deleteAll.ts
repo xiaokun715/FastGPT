@@ -11,7 +11,7 @@ async function handler(
   res: ApiResponseType<any>
 ) {
   const { appId } = req.body;
-  await authApp({ req, appId, authToken: true, per: WritePermissionVal });
+  await authApp({ req, appId, authToken: true, authApiKey: true, per: WritePermissionVal });
 
   await MongoChatInputGuide.deleteMany({
     appId

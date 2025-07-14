@@ -30,7 +30,13 @@ async function handler(
   }
 
   // 凭证校验
-  const { teamId } = await authApp({ req, authToken: true, appId, per: WritePermissionVal });
+  const { teamId } = await authApp({
+    req,
+    authToken: true,
+    authApiKey: true,
+    appId,
+    per: WritePermissionVal
+  });
 
   const where = {
     teamId: new Types.ObjectId(teamId),

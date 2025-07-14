@@ -18,7 +18,13 @@ async function handler(
     return [];
   }
 
-  await authApp({ req, authToken: true, appId: parentId, per: ReadPermissionVal });
+  await authApp({
+    req,
+    authToken: true,
+    authApiKey: true,
+    appId: parentId,
+    per: ReadPermissionVal
+  });
 
   return await getParents(parentId);
 }

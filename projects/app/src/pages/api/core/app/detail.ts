@@ -11,8 +11,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   if (!appId) {
     Promise.reject(CommonErrEnum.missingParams);
   }
-  // 凭证校验
-  const { app } = await authApp({ req, authToken: true, appId, per: ReadPermissionVal });
+  // 支持 token 和 apikey
+  const { app } = await authApp({
+    req,
+    authToken: true,
+    authApiKey: true,
+    appId,
+    per: ReadPermissionVal
+  });
 
   if (!app.permission.hasWritePer) {
     app.modules = [];

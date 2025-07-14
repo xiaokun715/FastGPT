@@ -8,7 +8,7 @@ export type deleteInputGuideBody = { appId: string; dataIdList: string[] };
 
 async function handler(req: ApiRequestProps<deleteInputGuideBody, ''>, res: ApiResponseType<any>) {
   const { appId, dataIdList } = req.body;
-  await authApp({ req, appId, authToken: true, per: WritePermissionVal });
+  await authApp({ req, appId, authToken: true, authApiKey: true, per: WritePermissionVal });
 
   await MongoChatInputGuide.deleteMany({
     _id: { $in: dataIdList },

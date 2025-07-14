@@ -33,7 +33,7 @@ async function handler(
       req,
       authToken: true
     }),
-    authApp({ req, authToken: true, appId, per: ReadPermissionVal })
+    authApp({ req, authToken: true, authApiKey: true, appId, per: ReadPermissionVal })
   ]);
 
   // auth balance
