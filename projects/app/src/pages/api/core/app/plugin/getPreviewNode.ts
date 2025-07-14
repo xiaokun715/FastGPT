@@ -24,7 +24,7 @@ async function handler(
   const { source } = await splitCombinePluginId(appId);
 
   if (source === PluginSourceEnum.personal) {
-    await authApp({ req, authToken: true, appId, per: ReadPermissionVal });
+    await authApp({ req, authToken: true, authApiKey: true, appId, per: ReadPermissionVal });
   }
 
   return getChildAppPreviewNode({ id: appId });

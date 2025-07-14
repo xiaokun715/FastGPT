@@ -17,7 +17,7 @@ async function handler(
 ): Promise<AppVersionSchemaType> {
   const { versionId, appId } = req.query as Props;
 
-  await authApp({ req, authToken: true, appId, per: WritePermissionVal });
+  await authApp({ req, authToken: true, authApiKey: true, appId, per: WritePermissionVal });
   const result = await MongoAppVersion.findById(versionId).lean();
 
   if (!result) {

@@ -12,7 +12,7 @@ export type UpdateAppVersionBody = {
 
 async function handler(req: ApiRequestProps<UpdateAppVersionBody>) {
   const { appId, versionId, versionName } = req.body;
-  await authApp({ appId, req, per: WritePermissionVal, authToken: true });
+  await authApp({ appId, req, per: WritePermissionVal, authToken: true, authApiKey: true });
 
   await MongoAppVersion.findByIdAndUpdate(
     { _id: versionId },

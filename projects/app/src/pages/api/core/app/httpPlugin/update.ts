@@ -24,7 +24,13 @@ export type UpdateHttpPluginBody = {
 async function handler(req: ApiRequestProps<UpdateHttpPluginBody>, res: NextApiResponse<any>) {
   const { appId, name, avatar, intro, pluginData } = req.body;
 
-  const { app } = await authApp({ req, authToken: true, appId, per: ManagePermissionVal });
+  const { app } = await authApp({
+    req,
+    authToken: true,
+    authApiKey: true,
+    appId,
+    per: ManagePermissionVal
+  });
 
   const storeData = {
     apiSchemaStr: app.pluginData?.apiSchemaStr,

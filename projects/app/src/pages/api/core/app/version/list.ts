@@ -22,7 +22,7 @@ async function handler(
   const { appId } = req.body;
   const { offset, pageSize } = parsePaginationRequest(req);
 
-  await authApp({ appId, req, per: WritePermissionVal, authToken: true });
+  await authApp({ appId, req, per: WritePermissionVal, authToken: true, authApiKey: true });
 
   const [result, total] = await Promise.all([
     (async () => {

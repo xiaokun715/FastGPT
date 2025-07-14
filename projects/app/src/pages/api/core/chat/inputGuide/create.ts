@@ -20,7 +20,7 @@ async function handler(
   res: ApiResponseType<any>
 ): Promise<createInputGuideResponse> {
   const { appId, textList } = req.body;
-  await authApp({ req, appId, authToken: true, per: WritePermissionVal });
+  await authApp({ req, appId, authToken: true, authApiKey: true, per: WritePermissionVal });
 
   try {
     const result = await MongoChatInputGuide.insertMany(
